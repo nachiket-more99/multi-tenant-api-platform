@@ -35,7 +35,7 @@ export const getTenantService = async (tenant_id) => {
 export const getAllUsersService = async (tenant_id) => {
   return prisma.user.findMany ({
     where : {
-        id : Number(tenant_id)
+        tenant_id : Number(tenant_id)
     }
   });
 };
