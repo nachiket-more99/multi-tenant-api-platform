@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgress_user
+      POSTGRES_PASSWORD: Pass123
+      POSTGRES_DB: multi-tenant-api-platform
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: postgres://postgress_user:Pass123@postgres:5432/multi-tenant-api-platform
