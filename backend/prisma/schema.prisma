@@ -16,18 +16,6 @@ enum Role {
   MEMBER
 }
 
-model User {
-  id            Int      @id @default(autoincrement())
-  tenant_id     Int
-  email         String
-  hash_password String
-  role          Role     @default(ADMIN)
-  created_at    DateTime @default(now())
-
-  tenant        Tenant   @relation(fields: [tenant_id], references: [id])  
-
-  @@unique([tenant_id, email])
-}
 
 model Tenant {
   id         Int      @id @default(autoincrement())
@@ -35,4 +23,64 @@ model Tenant {
   created_at DateTime @default(now())
 
   users      User[]
+  api_keys   ApiKey[]
+  logs       RequestLog[]
+  usage      ApiUsage[]
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  tenant_id     Int
+  email         String
+  hash_password String
+  role          Role     @default(MEMBER)
+  created_at    DateTime @default(now())
+
+  tenant        Tenant   @relation(fields: [tenant_id], references: [id])
+
+  @@unique([tenant_id, email])
+}
+
+model ApiKey {
+  id          Int       @id @default(autoincrement())
+  tenant_id   Int
+  key_hash    String
+  rate_limit  Int       @default(100)
+  is_active   Boolean   @default(true)
+  last_used   DateTime?
+  created_at  DateTime  @default(now())
+
+  tenant      Tenant   @relation(fields: [tenant_id], references: [id])
+  logs        RequestLog[]
+  usage       ApiUsage[]
+
+  @@unique([tenant_id, key_hash])
+}
+
+model RequestLog {
+  id            Int      @id @default(autoincrement())
+  tenant_id     Int
+  api_key_id    Int
+  path          String
+  method        String
+  status_code   Int
+  response_time Int
+  created_at    DateTime @default(now())
+
+  tenant        Tenant   @relation(fields: [tenant_id], references: [id])
+  api_key       ApiKey   @relation(fields: [api_key_id], references: [id])
+}
+
+model ApiUsage {
+  id          Int      @id @default(autoincrement())
+  tenant_id   Int
+  api_key_id  Int
+  path        String
+  count       Int      @default(0)
+  date        DateTime
+
+  tenant      Tenant   @relation(fields: [tenant_id], references: [id])
+  api_key     ApiKey   @relation(fields: [api_key_id], references: [id])
+
+  @@unique([api_key_id, path, date])
 }
