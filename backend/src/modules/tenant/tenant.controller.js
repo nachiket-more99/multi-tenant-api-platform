@@ -1,7 +1,12 @@
-import { createTenantService, getTenantService, getAllUsersService, updateTenantService } from "./tenant.service.js";
+import { createTenantService, addUserService, getTenantService, getAllUsersService, updateTenantService } from "./tenant.service.js";
 
 export const createTenant = async (req, res) => {
-  const user = await createTenantService(req.body);
+  const tenant = await createTenantService(req.body);
+  res.json(tenant);
+};
+
+export const addUser = async (req, res) => {
+  const user = await addUserService(req.body);
   res.json(user);
 };
 

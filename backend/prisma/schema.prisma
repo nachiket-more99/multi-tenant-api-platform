@@ -31,31 +31,31 @@ model Tenant {
 
 model User {
   id            Int      @id @default(autoincrement())
-  tenant_id     Int
-  email         String
+  tenant_id     Int?
+  email         String   @unique
   hash_password String
   role          Role     @default(MEMBER)
   created_at    DateTime @default(now())
 
-  tenant        Tenant   @relation(fields: [tenant_id], references: [id])
+  tenant        Tenant?  @relation(fields: [tenant_id], references: [id])
 
   @@unique([tenant_id, email])
 }
 
 model ApiKey {
-  id          Int       @id @default(autoincrement())
-  tenant_id   Int
-  key_hash    String
-  rate_limit  Int       @default(100)
-  is_active   Boolean   @default(true)
-  last_used   DateTime?
-  created_at  DateTime  @default(now())
+  id            Int       @id @default(autoincrement())
+  tenant_id     Int   
+  encrypted_key String    
+  rate_limit    Int       @default(100)
+  is_active     Boolean   @default(true)
+  last_used     DateTime?
+  created_at    DateTime  @default(now())
 
   tenant      Tenant   @relation(fields: [tenant_id], references: [id])
   logs        RequestLog[]
   usage       ApiUsage[]
 
-  @@unique([tenant_id, key_hash])
+  @@unique([tenant_id, encrypted_key])
 }
 
 model RequestLog {
