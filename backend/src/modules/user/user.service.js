@@ -2,7 +2,10 @@ import { prisma } from '../../lib/prisma.js';
 
 export const createUserService = async (data) => {
   return prisma.user.create({
-    data,
+    data: {
+      email: String(data.email),
+      hash_password: String(data.password)
+    }
   });
 };
 
