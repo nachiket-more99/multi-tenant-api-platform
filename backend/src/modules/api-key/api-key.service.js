@@ -1,5 +1,5 @@
 import { prisma } from '../../lib/prisma.js';
-import { generateApiKey, encryptKey, decryptKey } from "../../utils/crypto.js";
+import { generateApiKey, createHash } from "../../utils/crypto.js";
 import { AppError } from '../../utils/AppError.js';
 
 export const createApiKeyService = async (user) => {
@@ -10,14 +10,16 @@ export const createApiKeyService = async (user) => {
   // generate raw api key 
   const rawKey = generateApiKey();
 
-  // encrypt the key
-  const encryptedKey = encryptKey(rawKey);
+  // hash the key 
+  const keyHash = createHash(rawKey);
+
+  const keyPrefix = `${rawKey.substring(0, 8)}...${rawKey.slice(-4)}`
 
   // save it to db with req.body.tenant_id
   const key = await prisma.apiKey.create({
     data: {
       tenant_id: Number(user.tenantId),
-      encrypted_key: String(encryptedKey),
+      encrypted_key: String(keyHash),
     }
   });
 
