@@ -41,7 +41,7 @@ export const getTenantService = async (tenant_id) => {
   const tenantId = Number(tenant_id);
 
   if (isNaN(tenantId)) {
-    throw new AppError("Invalid tenant_id", 401);
+    throw new AppError("Invalid tenant_id", 400);
   }
 
   return prisma.tenant.findUnique({
@@ -59,7 +59,7 @@ export const getAllUsersService = async (tenant_id) => {
   const tenantId = Number(tenant_id);
 
   if (isNaN(tenantId)) {
-    throw new AppError("Invalid tenant_id", 401);
+    throw new AppError("Invalid tenant_id", 400);
   }
 
   return prisma.user.findMany ({
@@ -77,7 +77,7 @@ export const updateTenantService = async (tenant_id, name) => {
   const tenantId = Number(data.tenant_id);
 
   if (isNaN(tenantId)) {
-    throw new AppError("Invalid tenant_id", 401);
+    throw new AppError("Invalid tenant_id", 400);
   }
 
   return prisma.tenant.update ({
