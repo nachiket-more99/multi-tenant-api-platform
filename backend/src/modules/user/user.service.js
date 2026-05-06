@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt";
 import { prisma } from '../../lib/prisma.js';
 import { generateToken } from "../../utils/jwt.js";
+import { AppError } from '../../utils/AppError.js';
 
 export const createUserService = async (data) => {
   if (!data.email || !data.password) {
-    throw new Error("email and password required");
+    throw new AppError("email and password required", 400);
   }
 
   // hash passowrd
@@ -25,7 +26,7 @@ export const loginUserService = async (data) => {
   });
 
   if (!user) {
-    throw new Error("User not found");
+    throw new AppError('User not found', 404);        
   }
 
   const isMatch = await bcrypt.compare(
@@ -34,7 +35,7 @@ export const loginUserService = async (data) => {
   );
 
   if (!isMatch) {
-    throw new Error("Invalid credentials");
+    throw new AppError('Invalid credentials', 401); 
   }
 
   const token = generateToken(user);
@@ -51,6 +52,10 @@ export const loginUserService = async (data) => {
 };
 
 export const getUserService = async (user_id) => {
+  if (!user_id) {
+    throw new AppError("user_id required", 400);
+  }
+
   return prisma.user.findUnique({
     where : {
         id : Number(user_id)
