@@ -47,7 +47,7 @@ model ApiKey {
   tenant_id Int
 
   created_by Int
-  hash_key   String
+  hash_key   String @unique
   key_prefix String
 
   rate_limit    Int       @default(100)

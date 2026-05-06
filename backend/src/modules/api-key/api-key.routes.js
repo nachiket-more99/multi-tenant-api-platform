@@ -1,6 +1,6 @@
 import express from "express"
 import { createApiKey, getApiKey, getAllApiKeys, deleteApiKey } from "./api-key.controller.js"
-import { authMiddleware } from "../../middlewares/auth.middleware.js";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 const router = express.Router()
 

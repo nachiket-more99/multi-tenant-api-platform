@@ -5,7 +5,8 @@ import userRouter from "./modules/user/user.routes.js";
 import tenantRouter from "./modules/tenant/tenant.routes.js";
 import apiKeyRouter from "./modules/api-key/api-key.routes.js";
 import requestLogRouter from "./modules/request-log/request-log.routes.js";
-import apiUsage from "./modules/api-usage/api-usage.routes.js";
+import apiUsageRouter from "./modules/api-usage/api-usage.routes.js";
+import booksRouter from "./modules/books/books.routes.js";
 
 const app = express();
 
@@ -19,7 +20,10 @@ app.use("/user", userRouter);
 app.use("/tenant", tenantRouter);
 app.use("/api-key", apiKeyRouter);
 app.use("/logs", requestLogRouter);
-app.use("/usage", apiUsage);
+app.use("/usage", apiUsageRouter);
+
+
+app.use("/books", booksRouter);
 
 const PORT = 3000;
 app.listen(PORT, () => {

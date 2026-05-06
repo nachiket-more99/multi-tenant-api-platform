@@ -1,6 +1,6 @@
 import express from "express"
 import { getApiUsage, getAllApiUsages } from "./api-usage.controller.js"
-import { authMiddleware } from "../../middlewares/auth.middleware.js";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 const router = express.Router()
 

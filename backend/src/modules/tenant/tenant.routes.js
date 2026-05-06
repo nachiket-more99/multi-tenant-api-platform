@@ -1,6 +1,6 @@
 import express from "express"
 import { createTenant, addUser, getTenant, getAllUsers, updateTenant } from "./tenant.controller.js"
-import { authMiddleware } from "../../middlewares/auth.middleware.js";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 const router = express.Router()
 
