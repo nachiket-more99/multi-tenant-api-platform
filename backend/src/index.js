@@ -1,5 +1,3 @@
-console.log(process.env.DATABASE_URL);
-
 import express from "express";
 import userRouter from "./modules/user/user.routes.js";
 import tenantRouter from "./modules/tenant/tenant.routes.js";
