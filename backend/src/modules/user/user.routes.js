@@ -6,6 +6,6 @@ const router = express.Router()
 
 router.post("/create", createUser)
 router.post("/login", loginUser)
-router.get("/:user_id", authMiddleware, getUser)
+router.get("/me", authMiddleware, getUser)
 
 export default router

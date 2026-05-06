@@ -1,18 +1,26 @@
 import { prisma } from "../../lib/prisma.js";
 import { AppError } from '../../utils/AppError.js';
 
-export const getAllLogsService = async (api_key_id) => {
-  if (!api_key_id) {
-    throw new AppError("api_key_id required", 400);
-  }
+export const getAllLogsService = async (user, api_key_id) => {
   const apiKeyId = Number(api_key_id);
 
   if (isNaN(apiKeyId)) {
     throw new AppError("Invalid api_key_id", 400);
   }
+  const key = await prisma.apiKey.findUnique({
+    where: { id: apiKeyId }
+  });
+
+  if (!key) {
+    throw new AppError("API key not found", 404);
+  }
+
+  if (key.tenant_id !== user.tenantId) {
+    throw new AppError("Unauthorized", 403);
+  }
 
   return prisma.requestLog.findMany({
     where: { api_key_id: apiKeyId },
-    orderBy: { created_at: "desc" }
+    orderBy: { created_at: "desc" },
   });
 };

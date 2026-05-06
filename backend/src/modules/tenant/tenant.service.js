@@ -1,87 +1,69 @@
 import { prisma } from '../../lib/prisma.js';
 import { AppError } from '../../utils/AppError.js';
 
-export const createTenantService = async (data) => {
-  if (!data.name) {
+export const createTenantService = async (userId, name) => {
+  if (!name) {
     throw new AppError("name is required", 400);
   }
-  
+
   const tenant = await prisma.tenant.create({
-    data: {
-      name: String(data.name)
-    }
+    data: { name: String(name) }
   });
-  
+
   await prisma.user.update({
-    where: { id: Number(data.user_id) },
-    data: { tenant_id: Number(tenant.id) },
+    where: { id: Number(userId) },
+    data: { tenant_id: tenant.id },
   });
 
-  return tenant
+  return tenant;
 };
 
-export const addUserService = async (data) => {
-  if (!data.email || !data.tenant_id) {
-    throw new AppError("tenant_id and email required", 400);
+export const addUserService = async (user, email) => {
+  if (!email) {
+    throw new AppError("email required", 400);
   }
 
-  const user = await prisma.user.update({
-    where: { email: String(data.email) },
-    data: { tenant_id: Number(data.tenant_id) },
+  const existingUser = await prisma.user.findUnique({
+    where: { email: String(email) }
   });
 
-  return user
-};
-
-export const getTenantService = async (tenant_id) => {
-  if (!tenant_id) {
-    throw new AppError("tenant_id required", 400);
+  if (!existingUser) {
+    throw new AppError("User not found", 404);
   }
 
-  const tenantId = Number(tenant_id);
+  if (existingUser.tenant_id) {
+    throw new AppError("User already belongs to a tenant", 409);
+  }
 
-  if (isNaN(tenantId)) {
-    throw new AppError("Invalid tenant_id", 400);
+  return prisma.user.update({
+    where: { email: String(email) },
+    data: { tenant_id: Number(user.tenantId) },
+  });
+};
+
+export const getTenantService = async (tenantId) => {
+  if (!tenantId) {
+    throw new AppError("tenant not assigned", 400);
   }
 
   return prisma.tenant.findUnique({
-    where : {
-        id : tenantId
-    }
+    where: { id: Number(tenantId) }
   });
 };
 
-export const getAllUsersService = async (tenant_id) => {
-  if (!tenant_id) {
-    throw new AppError("tenant_id required", 400);
-  }
-
-  const tenantId = Number(tenant_id);
-
-  if (isNaN(tenantId)) {
-    throw new AppError("Invalid tenant_id", 400);
-  }
-
-  return prisma.user.findMany ({
-    where : {
-        tenant_id : tenantId
-    }
+export const getAllUsersService = async (tenantId) => {
+  return prisma.user.findMany({
+    where: { tenant_id: Number(tenantId) }
   });
 };
 
-export const updateTenantService = async (tenant_id, name) => {
-  if (!tenant_id || name) {
-    throw new AppError("tenant_id and name required", 400);
+export const updateTenantService = async (user, name) => {
+  if (!name) {
+    throw new AppError("name required", 400);
   }
 
-  const tenantId = Number(data.tenant_id);
-
-  if (isNaN(tenantId)) {
-    throw new AppError("Invalid tenant_id", 400);
-  }
-
-  return prisma.tenant.update ({
-    where: { id: tenantId },
+  return prisma.tenant.update({
+    where: { id: Number(user.tenantId) },
     data: { name: String(name) },
   });
 };

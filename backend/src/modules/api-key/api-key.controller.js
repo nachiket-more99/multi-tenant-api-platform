@@ -2,8 +2,8 @@ import { createApiKeyService, getApiKeyService, getAllApiKeysService, deleteApiK
 
 export const createApiKey = async (req, res) => {
   try {
-    const api_key = await createApiKeyService(req.body);
-    res.status(201).json({ "api_key": api_key });
+    const api_key = await createApiKeyService(req.user);
+    res.status(201).json({ api_key });
   } catch (err) {
     res.status(err.statusCode || 500).json({ error: err.message });
   }
@@ -11,8 +11,8 @@ export const createApiKey = async (req, res) => {
 
 export const getApiKey = async (req, res) => {
   try {
-    const api_key = await getApiKeyService(req.params.api_key_id);
-    res.status(200).json({ "api_key": api_key });
+    const api_key = await getApiKeyService(req.user, req.params.api_key_id);
+    res.status(200).json({ api_key });
   } catch (err) {
     res.status(err.statusCode || 500).json({ error: err.message });
   }
@@ -20,8 +20,8 @@ export const getApiKey = async (req, res) => {
 
 export const getAllApiKeys = async (req, res) => {
   try {
-    const api_keys = await getAllApiKeysService(req.params.tenant_id);
-    res.status(200).json({ "api_keys": api_keys });
+    const api_keys = await getAllApiKeysService(req.user);
+    res.status(200).json({ api_keys });
   } catch (err) {
     res.status(err.statusCode || 500).json({ error: err.message });
   }
@@ -29,8 +29,8 @@ export const getAllApiKeys = async (req, res) => {
 
 export const deleteApiKey = async (req, res) => {
   try {
-    await deleteApiKeyService(req.params.api_key_id);
-    res.status(200).json("api key deleted");
+    await deleteApiKeyService(req.user, req.params.api_key_id);
+    res.status(200).json({ message: "api key deleted" });
   } catch (err) {
     res.status(err.statusCode || 500).json({ error: err.message });
   }

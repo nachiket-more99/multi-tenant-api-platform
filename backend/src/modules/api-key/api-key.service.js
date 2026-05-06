@@ -2,15 +2,9 @@ import { prisma } from '../../lib/prisma.js';
 import { generateApiKey, encryptKey, decryptKey } from "../../utils/crypto.js";
 import { AppError } from '../../utils/AppError.js';
 
-export const createApiKeyService = async (data) => {
-  if (!data.tenant_id) {
-    throw new AppError("tenant_id required", 400);
-  }
-
-  const tenantId = Number(data.tenant_id);
-
-  if (isNaN(tenantId)) {
-    throw new AppError("Invalid tenant_id", 400);
+export const createApiKeyService = async (user) => {
+  if (!user.tenantId) {
+    throw new AppError("User not assigned to tenant", 400);
   }
 
   // generate raw api key 
@@ -22,7 +16,7 @@ export const createApiKeyService = async (data) => {
   // save it to db with req.body.tenant_id
   const key = await prisma.apiKey.create({
     data: {
-      tenant_id: tenantId,
+      tenant_id: Number(user.tenantId),
       encrypted_key: String(encryptedKey),
     }
   });
@@ -37,14 +31,10 @@ export const createApiKeyService = async (data) => {
 
 };
 
-export const getApiKeyService = async (api_key_id) => {
-  if (!api_key_id) {
-    throw new AppError("api_key_id required", 400);
-  }
-
+export const getApiKeyService = async (user, api_key_id) => {
   const apiKeyId = Number(api_key_id);
 
-  if (isNaN(tenantId)) {
+  if (isNaN(api_key_id)) {
     throw new AppError("Invalid api_key_id", 400);
   }
 
@@ -53,6 +43,14 @@ export const getApiKeyService = async (api_key_id) => {
         id : apiKeyId
     }
   });
+
+  if (!key) {
+    throw new AppError("API key not found", 404);
+  }
+
+  if (key.tenant_id !== user.tenantId) {
+    throw new AppError("Unauthorized", 403);
+  }
 
   return {
     id: key.id,
@@ -63,40 +61,37 @@ export const getApiKeyService = async (api_key_id) => {
 
 };
 
-export const getAllApiKeysService = async (tenant_id) => {
-  if (!tenant_id) {
-    throw new AppError("tenant_id required", 400);
-  }
-
-  const tenantId = Number(tenant_id);
-
-  if (isNaN(tenantId)) {
-    throw new AppError("Invalid tenant_id", 400);
-  }
-
-  return prisma.apiKey.findMany ({
-    where : {
-        tenant_id : tenantId
+export const getAllApiKeysService = async (user) => {
+  return prisma.apiKey.findMany({
+    where: {
+      tenant_id: Number(user.tenantId)
+    },
+    orderBy: {
+      created_at: "desc"
     }
   });
 };
 
-export const deleteApiKeyService = async (api_key_id) => {
-  if (!api_key_id) {
-    throw new AppError("api_key_id required", 400);
-  }
-
+export const deleteApiKeyService = async (user, api_key_id) => {
   const apiKeyId = Number(api_key_id);
 
-  if (isNaN(tenantId)) {
+  if (isNaN(apiKeyId)) {
     throw new AppError("Invalid api_key_id", 400);
   }
 
-  await prisma.apiKey.delete ({
-    where: { 
-      id: apiKeyId
-    }
-  })
-  
-  return;
+  const key = await prisma.apiKey.findUnique({
+    where: { id: apiKeyId }
+  });
+
+  if (!key) {
+    throw new AppError("API key not found", 404);
+  }
+
+  if (key.tenant_id !== user.tenantId) {
+    throw new AppError("Unauthorized", 403);
+  }
+
+  await prisma.apiKey.delete({
+    where: { id: apiKeyId }
+  });
 };

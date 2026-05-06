@@ -4,7 +4,7 @@ import { authMiddleware } from "../../middlewares/auth.middleware.js";
 
 const router = express.Router()
 
-router.get("/:api_usage_id", authMiddleware, getApiUsage)
-router.get("/:tenant_id", authMiddleware, getAllApiUsages)
+router.get("/:api_key_id", authMiddleware, getApiUsage)
+router.get("/", authMiddleware, getAllApiUsages)
 
 export default router

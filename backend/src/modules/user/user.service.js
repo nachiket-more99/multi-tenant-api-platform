@@ -56,11 +56,17 @@ export const getUserService = async (user_id) => {
     throw new AppError("user_id required", 400);
   }
 
-  return prisma.user.findUnique({
+  const user = await prisma.user.findUnique({
     where : {
         id : Number(user_id)
     }
   });
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  return user;
 };
 
 // export const getAllUsersService = async (tenant_id) => {

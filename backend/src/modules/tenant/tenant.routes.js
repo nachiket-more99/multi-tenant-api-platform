@@ -6,8 +6,8 @@ const router = express.Router()
 
 router.post("/create", authMiddleware, createTenant)
 router.post("/add-user", authMiddleware, addUser)
-router.get("/:tenant_id", authMiddleware, getTenant)
-router.get("/:tenant_id/users", authMiddleware, getAllUsers)
-router.patch("/:tenant_id", authMiddleware, updateTenant)
+router.get("/me", authMiddleware, getTenant)
+router.get("/users", authMiddleware, getAllUsers)
+router.patch("/", authMiddleware, updateTenant)
 
 export default router

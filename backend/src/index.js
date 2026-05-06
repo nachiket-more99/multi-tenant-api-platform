@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 
 app.use("/user", userRouter);
 app.use("/tenant", tenantRouter);
-app.use("/apikey", apiKeyRouter);
+app.use("/api-key", apiKeyRouter);
 app.use("/logs", requestLogRouter);
 app.use("/usage", apiUsage);
 
