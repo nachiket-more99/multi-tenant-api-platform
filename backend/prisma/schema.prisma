@@ -17,16 +17,15 @@ enum Role {
   MEMBER
 }
 
-
 model Tenant {
   id         Int      @id @default(autoincrement())
   name       String
   created_at DateTime @default(now())
 
-  users      User[]
-  api_keys   ApiKey[]
-  logs       RequestLog[]
-  usage      ApiUsage[]
+  users    User[]
+  api_keys ApiKey[]
+  logs     RequestLog[]
+  usage    ApiUsage[]
 }
 
 model User {
@@ -37,25 +36,32 @@ model User {
   role          Role     @default(MEMBER)
   created_at    DateTime @default(now())
 
-  tenant        Tenant?  @relation(fields: [tenant_id], references: [id])
+  tenant   Tenant?  @relation(fields: [tenant_id], references: [id])
+  api_keys ApiKey[]
 
   @@unique([tenant_id, email])
 }
 
 model ApiKey {
-  id            Int       @id @default(autoincrement())
-  tenant_id     Int   
-  encrypted_key String    
+  id        Int @id @default(autoincrement())
+  tenant_id Int
+
+  created_by Int
+  hash_key   String
+  key_prefix String
+
   rate_limit    Int       @default(100)
   is_active     Boolean   @default(true)
   last_used     DateTime?
   created_at    DateTime  @default(now())
 
-  tenant      Tenant   @relation(fields: [tenant_id], references: [id])
-  logs        RequestLog[]
-  usage       ApiUsage[]
+  tenant  Tenant @relation(fields: [tenant_id], references: [id])
+  creator User   @relation(fields: [created_by], references: [id])
 
-  @@unique([tenant_id, encrypted_key])
+  logs  RequestLog[]
+  usage ApiUsage[]
+
+  @@unique([tenant_id, hash_key])
 }
 
 model RequestLog {
@@ -68,20 +74,20 @@ model RequestLog {
   response_time Int
   created_at    DateTime @default(now())
 
-  tenant        Tenant   @relation(fields: [tenant_id], references: [id])
-  api_key       ApiKey   @relation(fields: [api_key_id], references: [id])
+  tenant  Tenant @relation(fields: [tenant_id], references: [id])
+  api_key ApiKey @relation(fields: [api_key_id], references: [id])
 }
 
 model ApiUsage {
-  id          Int      @id @default(autoincrement())
-  tenant_id   Int
-  api_key_id  Int
-  path        String
-  count       Int      @default(0)
-  date        DateTime
+  id         Int      @id @default(autoincrement())
+  tenant_id  Int
+  api_key_id Int
+  path       String
+  count      Int      @default(0)
+  date       DateTime
 
-  tenant      Tenant   @relation(fields: [tenant_id], references: [id])
-  api_key     ApiKey   @relation(fields: [api_key_id], references: [id])
+  tenant  Tenant @relation(fields: [tenant_id], references: [id])
+  api_key ApiKey @relation(fields: [api_key_id], references: [id])
 
   @@unique([api_key_id, path, date])
 }

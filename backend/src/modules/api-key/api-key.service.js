@@ -19,15 +19,20 @@ export const createApiKeyService = async (user) => {
   const key = await prisma.apiKey.create({
     data: {
       tenant_id: Number(user.tenantId),
-      encrypted_key: String(keyHash),
+      created_by: Number(user.userId),
+      hash_key: String(keyHash),
+      key_prefix: String(keyPrefix)
     }
   });
 
   // return api key
   return {
     id: key.id,
-    key: rawKey,
+    tenant_id: key.tenant_id,
+    api_key: rawKey,
+    key_prefix: key.key_prefix,
     is_active: key.is_active,
+    last_used: key.last_used,
     created_at: key.created_at
   };
 
@@ -43,6 +48,13 @@ export const getApiKeyService = async (user, api_key_id) => {
   const key = await prisma.apiKey.findUnique({
     where : {
         id : apiKeyId
+    },
+    include: {
+      creator: {
+        select: {
+          email: true
+        }
+      }
     }
   });
 
@@ -54,12 +66,7 @@ export const getApiKeyService = async (user, api_key_id) => {
     throw new AppError("Unauthorized", 403);
   }
 
-  return {
-    id: key.id,
-    key: decryptKey(key.encrypted_key),
-    is_active: key.is_active,
-    created_at: key.created_at
-  };
+  return key;
 
 };
 
@@ -67,6 +74,13 @@ export const getAllApiKeysService = async (user) => {
   return prisma.apiKey.findMany({
     where: {
       tenant_id: Number(user.tenantId)
+    },
+    include: {
+      creator: {
+        select: {
+          email: true
+        }
+      }
     },
     orderBy: {
       created_at: "desc"
