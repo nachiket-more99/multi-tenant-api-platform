@@ -1,9 +1,10 @@
 import express from "express"
-import { getAllLogs } from "./request-log.controller.js"
+import { getAllLogs, getAllApiLogs } from "./request-log.controller.js"
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 const router = express.Router()
 
-router.get("/all/:api_key_id", authMiddleware, getAllLogs)
+router.get("/all", authMiddleware, getAllLogs)
+router.get("/all/:api_key_id", authMiddleware, getAllApiLogs)
 
 export default router

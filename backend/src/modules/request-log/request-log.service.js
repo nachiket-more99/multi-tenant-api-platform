@@ -1,7 +1,14 @@
 import { prisma } from "../../lib/prisma.js";
 import { AppError } from '../../utils/AppError.js';
 
-export const getAllLogsService = async (user, api_key_id) => {
+export const getAllLogsService = async (user) => {
+  return prisma.requestLog.findMany({
+    where: { tenant: user.tenantId },
+    orderBy: { created_at: "desc" },
+  });
+};
+
+export const getAllApiLogsService = async (user, api_key_id) => {
   const apiKeyId = Number(api_key_id);
 
   if (isNaN(apiKeyId)) {
