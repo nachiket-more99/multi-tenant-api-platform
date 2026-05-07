@@ -6,6 +6,7 @@ import requestLogRouter from "./modules/request-log/request-log.routes.js";
 import apiUsageRouter from "./modules/api-usage/api-usage.routes.js";
 import booksRouter from "./modules/books/books.routes.js";
 import './worker/worker.js';
+import './jobs/scheduler.js';
 
 const app = express();
 
