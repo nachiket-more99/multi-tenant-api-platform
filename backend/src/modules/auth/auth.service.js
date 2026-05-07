@@ -48,6 +48,7 @@ export const loginUserService = async (data, res) => {
   });
 
   return {
+    token,
     user: {
       id: user.id,
       email: user.email,

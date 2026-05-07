@@ -1,16 +1,19 @@
 import { verifyToken } from "../utils/jwt.js";
 
 export const authMiddleware = (req, res, next) => {
+  // get token from cookie
+  const cookieToken = req.cookies?.token;
+ 
   // get authorization header
   const authHeader = req.headers.authorization;
+  const headerToken = authHeader?.split(" ")[1];
 
-  // if no header then not authenticated
-  if (!authHeader) {
+
+  const token = cookieToken || headerToken;
+
+  if (!token) {
     return res.status(401).json({ error: "No token provided" });
   }
-
-  // extract token Bearer
-  const token = authHeader.split(" ")[1];
 
   try {
     // verify token and attach data to request
