@@ -1,4 +1,5 @@
 import express from "express";
+import authRouter from "./modules/auth/auth.routes.js";
 import userRouter from "./modules/user/user.routes.js";
 import tenantRouter from "./modules/tenant/tenant.routes.js";
 import apiKeyRouter from "./modules/api-key/api-key.routes.js";
@@ -7,8 +8,16 @@ import apiUsageRouter from "./modules/api-usage/api-usage.routes.js";
 import booksRouter from "./modules/books/books.routes.js";
 import './worker/worker.js';
 import './jobs/scheduler.js';
+import cors from "cors";
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
@@ -16,6 +25,7 @@ app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
 
+app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/tenant", tenantRouter);
 app.use("/api-key", apiKeyRouter);
