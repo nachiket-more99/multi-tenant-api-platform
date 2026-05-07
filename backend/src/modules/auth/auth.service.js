@@ -20,7 +20,7 @@ export const registerUserService = async (data) => {
   });
 };
 
-export const loginUserService = async (data) => {
+export const loginUserService = async (data, res) => {
   const user = await prisma.user.findUnique({
     where: { email: data.email },
   });
@@ -40,8 +40,14 @@ export const loginUserService = async (data) => {
 
   const token = generateToken(user);
 
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: false, 
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000, 
+  });
+
   return {
-    token,
     user: {
       id: user.id,
       email: user.email,
@@ -49,4 +55,14 @@ export const loginUserService = async (data) => {
       role: user.role,
     },
   };
+};
+
+export const logoutUserService = async (res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: false,
+  });
+
+  return { message: "Logged out successfully" };
 };

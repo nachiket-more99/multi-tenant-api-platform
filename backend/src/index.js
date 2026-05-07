@@ -9,6 +9,7 @@ import booksRouter from "./modules/books/books.routes.js";
 import './worker/worker.js';
 import './jobs/scheduler.js';
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(
   })
 );
 
+app.use(cookieParser());
 app.use(express.json());
 
 app.get("/", (req, res) => {
