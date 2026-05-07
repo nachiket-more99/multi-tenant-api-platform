@@ -12,7 +12,7 @@ export const createTenantService = async (userId, name) => {
 
   await prisma.user.update({
     where: { id: Number(userId) },
-    data: { tenant_id: tenant.id },
+    data: { tenant_id: tenant.id, role: "ADMIN" },
   });
 
   return tenant;
