@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Link2, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
-// import { register } from "@/api/auth.api";
+import { register } from "@/api/auth.api";
 import { useNavigate } from "react-router-dom";
 
 export function Register() {
@@ -50,7 +50,7 @@ export function Register() {
     if (!validate()) return;
 
     try {
-    //   await register(firstName, lastName, email, password);
+      await register(email, password);
 
       navigate("/login");
     } catch (err: any) {

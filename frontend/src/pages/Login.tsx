@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Link2 } from "lucide-react";
 import { useState } from "react";
 
+import { login } from "@/api/auth.api";
 import { Link, useNavigate } from "react-router-dom";
 // import { toast } from "sonner";
 
@@ -42,8 +43,8 @@ export function Login() {
     if (!validate()) return;
 
     try {
-      // const user = await login(email, password);
-      // navigate("/dashboard");
+      const user = await login(email, password);
+      navigate("/dashboard");
     } catch {
       // handled globally by axios interceptor
     }
