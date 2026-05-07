@@ -22,3 +22,27 @@ cron.schedule('0 2 * * *', async () => {
 },{ 
     timezone: "UTC" 
 });
+
+// schedule cron job to log daily usage summary every day at midnight
+cron.schedule('0 0 * * *', async () => {
+    console.log('[CRON] Running daily usage summary...');
+
+    // get todays date with no time
+    const now = new Date();
+    const today = new Date(Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        now.getUTCDate()
+    ));
+
+    // aggregate all the daily api usage and get summary
+    const summary = await prisma.apiUsage.aggregate({
+        where: { date: today },
+        _sum: { count: true }
+    });
+
+    console.log(`[CRON] Total requests today: ${summary._sum.count || 0}`);
+},{ 
+    timezone: "UTC" 
+});
+
