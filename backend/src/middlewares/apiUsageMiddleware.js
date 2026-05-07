@@ -1,4 +1,5 @@
 import { prisma } from '../lib/prisma.js';
+import { usageQueue } from '../queue/queue.js';
 
 export const apiUsageMiddleware = (req, res, next) => {
     // after response finishes → capture data
@@ -16,28 +17,53 @@ export const apiUsageMiddleware = (req, res, next) => {
                 now.getUTCDate()
             ));
 
-            // increment count by 1 and create if not present and save usage to DB 
-            await prisma.apiUsage.upsert({
-                where: {
-                    api_key_id_path_date: {
+            // add log to queue
+            await usageQueue.add('usage', {
+                usage: {
+                    where: {
+                        api_key_id_path_date: {
+                            api_key_id: key.id,
+                            path: req.originalUrl,
+                            date: today,
+                        },
+                    },
+                    update: {
+                        count: {
+                            increment: 1,
+                        },
+                    },
+                    create: {
+                        tenant_id: key.tenant_id,
                         api_key_id: key.id,
                         path: req.originalUrl,
+                        count: 1,
                         date: today,
                     },
                 },
-                update: {
-                    count: {
-                        increment: 1,
-                    },
-                },
-                create: {
-                    tenant_id: key.tenant_id,
-                    api_key_id: key.id,
-                    path: req.originalUrl,
-                    count: 1,
-                    date: today,
-                },
-            });
+            })
+
+            // // increment count by 1 and create if not present and save usage to DB 
+            // await prisma.apiUsage.upsert({
+            //     where: {
+            //         api_key_id_path_date: {
+            //             api_key_id: key.id,
+            //             path: req.originalUrl,
+            //             date: today,
+            //         },
+            //     },
+            //     update: {
+            //         count: {
+            //             increment: 1,
+            //         },
+            //     },
+            //     create: {
+            //         tenant_id: key.tenant_id,
+            //         api_key_id: key.id,
+            //         path: req.originalUrl,
+            //         count: 1,
+            //         date: today,
+            //     },
+            // });
         } catch (err) {
             console.error("Usage error:", err.message);
         }

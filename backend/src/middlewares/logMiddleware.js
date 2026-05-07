@@ -1,4 +1,5 @@
 import { prisma } from '../lib/prisma.js';
+import { logQueue } from '../queue/queue.js';
 
 export const logMiddleware = (req, res, next) => {
     // start timer
@@ -13,9 +14,9 @@ export const logMiddleware = (req, res, next) => {
 
             const key = req.apiKey
 
-            // save log to DB 
-            await prisma.requestLog.create({
-                data: {  
+            // add log to queue
+            await logQueue.add('log', {
+                log: {  
                     tenant_id: Number(key.tenant_id),    
                     api_key_id: Number(key.id),    
                     path: String(req.originalUrl),          
@@ -23,7 +24,19 @@ export const logMiddleware = (req, res, next) => {
                     status_code: Number(res.statusCode),   
                     response_time: Number(responseTime) 
                 },
-            });
+            })
+
+            // // save log to DB 
+            // await prisma.requestLog.create({
+            //     data: {  
+            //         tenant_id: Number(key.tenant_id),    
+            //         api_key_id: Number(key.id),    
+            //         path: String(req.originalUrl),          
+            //         method: String(req.method),       
+            //         status_code: Number(res.statusCode),   
+            //         response_time: Number(responseTime) 
+            //     },
+            // });
         } catch (err) {
             console.error("Log error:", err.message);
         }
