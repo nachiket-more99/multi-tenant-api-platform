@@ -5,6 +5,7 @@ import apiKeyRouter from "./modules/api-key/api-key.routes.js";
 import requestLogRouter from "./modules/request-log/request-log.routes.js";
 import apiUsageRouter from "./modules/api-usage/api-usage.routes.js";
 import booksRouter from "./modules/books/books.routes.js";
+import './worker/worker.js';
 
 const app = express();
 
