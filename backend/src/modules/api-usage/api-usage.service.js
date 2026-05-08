@@ -60,11 +60,11 @@ export const getAllApiUsagesService = async (user) => {
 export const getUsageSummaryService = async (user, api_key_id) => {
   const now = new Date();
 
-  const today = new Date(
+  const today = new Date(Date.UTC(
     now.getUTCFullYear(),
     now.getUTCMonth(),
     now.getUTCDate()
-  );
+  ));
 
   const weekStart = new Date(
     now.getUTCFullYear(),
