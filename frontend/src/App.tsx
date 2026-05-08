@@ -3,18 +3,22 @@ import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { Dashboard } from "./pages/Dashboard";
 import { SidebarLayout} from "./layouts/SidebarLayout";
+import { ApiKeys} from "./pages/ApiKeys";
+
 
 function App() {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<SidebarLayout />}>
-          <Route index element={<Dashboard />} />
-        </Route>
-      </Routes>
+<Routes>
+  <Route path="/" element={<Login />} />
+  <Route path="/login" element={<Login />} />
+  <Route path="/register" element={<Register />} />
+
+  <Route path="/" element={<SidebarLayout />}>
+    <Route path="dashboard" element={<Dashboard />} />
+    <Route path="api-keys" element={<ApiKeys />} />
+  </Route>
+</Routes>
     </>
   );
 }
