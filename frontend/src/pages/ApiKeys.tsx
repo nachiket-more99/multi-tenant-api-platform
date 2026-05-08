@@ -23,6 +23,7 @@ import {
 } from "../api/api-keys.api";
 
 import { useGetAllApiKeys } from "../hooks/useGetAllApiKeys";
+import { useMe } from "@/hooks/useMe";
 
 export type ApiKey = {
   id: number;
@@ -41,6 +42,9 @@ export type ApiKey = {
 };
 
 export function ApiKeys() {
+  const { data: user, isError } = useMe();
+  const isAdmin = user?.role === "ADMIN";
+
   const queryClient = useQueryClient();
 
   const [generatedKey, setGeneratedKey] =
@@ -59,31 +63,37 @@ export function ApiKeys() {
     isLoading,
   } = useGetAllApiKeys();
 
-  const createMutation = useMutation({
-    mutationFn: createApiKey,
+const createMutation = useMutation({
+  mutationFn: createApiKey,
 
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({
-        queryKey: ["api-keys"],
-      });
+  onSuccess: async (data) => {
+    await queryClient.invalidateQueries({
+      queryKey: ["api-keys"],
+    });
 
-      setGeneratedKey(
-        data.api_key.api_key
-      );
+    await queryClient.refetchQueries({
+      queryKey: ["api-keys"],
+    });
 
-      setOpenGeneratedDialog(true);
-    },
-  });
+    setGeneratedKey(data.api_key.api_key);
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteApiKey,
+    setOpenGeneratedDialog(true);
+  },
+});
 
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["api-keys"],
-      });
-    },
-  });
+const deleteMutation = useMutation({
+  mutationFn: deleteApiKey,
+
+  onSuccess: async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ["api-keys"],
+    });
+
+    await queryClient.refetchQueries({
+      queryKey: ["api-keys"],
+    });
+  },
+});
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(
@@ -190,9 +200,9 @@ export function ApiKeys() {
                         LAST USED
                       </th>
 
-                      <th className="px-6 py-4 text-left font-medium">
+                      {isAdmin && (<th className="px-6 py-4 text-left font-medium">
                         ACTIONS
-                      </th>
+                      </th>)}
                     </tr>
                   </thead>
 
@@ -254,27 +264,27 @@ export function ApiKeys() {
                           )}
                         </td>
 
-                        <td className="px-6 py-4">
-                          <ConfirmDialog
-                            title="Delete API Key?"
-                            description="This action cannot be undone."
-                            confirmText="Delete"
-                            destructive
-                            onConfirm={() =>
-                              deleteMutation.mutate(
-                                key.id
-                              )
-                            }
-                          >
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="text-red-500 hover:bg-red-500/10 hover:text-red-500"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </ConfirmDialog>
-                        </td>
+<td className="px-6 py-4">
+  {isAdmin && (
+    <ConfirmDialog
+      title="Delete API Key?"
+      description="This action cannot be undone."
+      confirmText="Delete"
+      destructive
+      onConfirm={() =>
+        deleteMutation.mutate(key.id)
+      }
+    >
+      <Button
+        size="icon"
+        variant="ghost"
+        className="text-red-500 hover:bg-red-500/10 hover:text-red-500"
+      >
+        <Trash2 className="h-4 w-4" />
+      </Button>
+    </ConfirmDialog>
+  )}
+</td>
                       </tr>
                     ))}
                   </tbody>

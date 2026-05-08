@@ -44,7 +44,7 @@ export function Login() {
 
     try {
       const user = await login(email, password);
-      navigate("/dashboard");
+      navigate("/api-keys");
     } catch {
       // handled globally by axios interceptor
     }

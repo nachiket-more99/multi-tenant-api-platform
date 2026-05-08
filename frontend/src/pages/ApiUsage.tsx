@@ -92,10 +92,6 @@ async function loadData() {
     getUsageLogs(key),
   ]);
 
-  console.log("summary:", s);
-  console.log("chart:", c);
-  console.log("logs:", l);   
-
   setSummary(s ?? null);
   setChart(c ?? []);
   setLogs(l ?? []);
