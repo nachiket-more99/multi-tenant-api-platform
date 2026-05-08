@@ -64,7 +64,7 @@ type Log = {
   }
 };
 
-export default function ApiUsage() {
+export function ApiUsage() {
   const [keys, setKeys] = useState<Key[]>([]);
   const [selectedKey, setSelectedKey] = useState<string>("all");
 
