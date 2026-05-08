@@ -1,4 +1,4 @@
-import { getAllLogsService } from "./request-log.service.js";
+import { getAllLogsService, getAllApiLogsService } from "./request-log.service.js";
 
 export const getAllLogs = async (req, res) => {
   try {

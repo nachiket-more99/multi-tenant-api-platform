@@ -3,8 +3,9 @@ import { AppError } from '../../utils/AppError.js';
 
 export const getAllLogsService = async (user) => {
   return prisma.requestLog.findMany({
-    where: { tenant: user.tenantId },
+    where: { tenant_id: user.tenantId }, 
     orderBy: { created_at: "desc" },
+    take: 50,
   });
 };
 
@@ -29,5 +30,6 @@ export const getAllApiLogsService = async (user, api_key_id) => {
   return prisma.requestLog.findMany({
     where: { api_key_id: apiKeyId },
     orderBy: { created_at: "desc" },
+    take: 50,
   });
 };
