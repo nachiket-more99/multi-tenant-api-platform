@@ -30,6 +30,12 @@ export const validateApiKey = async (req, res, next) => {
 
             // attach to request
             req.apiKey = parsed;
+
+            await prisma.apiKey.update({
+                where: { id: parsed.id },
+                data: { last_used: new Date() },
+            });
+
             return next();
         }
 
@@ -55,6 +61,11 @@ export const validateApiKey = async (req, res, next) => {
 
         // attach key to req
         req.apiKey = key;
+
+        await prisma.apiKey.update({
+            where: { id: key.id },
+            data: { last_used: new Date() },
+        });
 
         next();
 
