@@ -123,9 +123,9 @@ async function loadData() {
     v >= 0 ? "text-green-600" : "text-red-500";
 
   return (
-    <div className="space-y-8">
+    <div className="">
 
-      <div className="flex items-center justify-between pb-5">
+        <div className="flex items-center justify-between pb-5">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
             API Usage Analytics
@@ -154,6 +154,8 @@ async function loadData() {
           ))}
         </select>
       </div>
+      
+        <div className="mb-5 border-t" />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
@@ -260,7 +262,7 @@ async function loadData() {
                     API KEY
                   </th>
                   <th className="px-6 py-4 text-left">
-                    DATE
+                    CREATED AT
                   </th>
                   <th className="px-6 py-4 text-left">
                     REQUESTS

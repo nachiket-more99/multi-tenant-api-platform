@@ -46,24 +46,37 @@ export function TestBooks() {
   };
 
   return (
-    <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold">Test Books API</h1>
-        <p className="text-sm text-gray-500">
-          Test your API key directly like Postman
-        </p>
+        <div className="flex items-center justify-between pb-4">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Test Books API
+            </h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Test your API key directly like Postman
+            </p>
+          </div>
+        </div>
+
+        <div className="border-t border-border/50 mb-6" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
         <Card>
           <CardContent className="p-5 space-y-5">
-            <h2 className="text-lg font-semibold">Request Builder</h2>
+            <h2 className="text-lg font-semibold">
+              Request Builder
+            </h2>
 
             <div>
-              <p className="text-sm text-gray-500 mb-1">API Key</p>
+              <p className="text-sm text-muted-foreground mb-1">
+                API Key
+              </p>
 
               <input
-                className="w-full border p-2 rounded bg-white font-mono text-sm"
+                className="w-full border rounded-md px-3 py-2 bg-white font-mono text-sm"
                 placeholder="Paste your API key here"
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
@@ -71,19 +84,25 @@ export function TestBooks() {
             </div>
 
             <div>
-              <p className="text-sm text-gray-500 mb-1">Endpoint</p>
+              <p className="text-sm text-muted-foreground mb-1">
+                Endpoint
+              </p>
 
-              <div className="flex items-center gap-2 bg-gray-100 p-2 rounded">
-                <Badge>GET</Badge>
-                <span className="font-mono text-sm">{endpoint}</span>
+              <div className="flex items-center gap-2 bg-muted/40 p-2 rounded-md">
+                <Badge variant="outline">GET</Badge>
+                <span className="font-mono text-sm">
+                  {endpoint}
+                </span>
               </div>
             </div>
 
             <div>
-              <p className="text-sm text-gray-500 mb-2">Request Headers</p>
+              <p className="text-sm text-muted-foreground mb-2">
+                Request Headers
+              </p>
 
-              <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto">
-                {`GET ${endpoint} HTTP/1.1
+              <pre className="text-xs bg-muted/40 p-3 rounded-md overflow-auto">
+{`GET ${endpoint} HTTP/1.1
 Authorization: Bearer ${apiKey || "<your_api_key>"}
 Content-Type: application/json
 X-Tenant-ID: 2`}
@@ -98,29 +117,38 @@ X-Tenant-ID: 2`}
 
         <Card>
           <CardContent className="p-5 space-y-3">
-            <h2 className="text-lg font-semibold">Response</h2>
+            <h2 className="text-lg font-semibold">
+              Response
+            </h2>
 
-            {loading && <p className="text-gray-400">Loading...</p>}
+            {loading && (
+              <p className="text-muted-foreground">
+                Loading...
+              </p>
+            )}
 
             {!loading && response && (
               <>
-                <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto">
-                  {`HTTP/1.1 ${response?.meta?.status || 200} OK
+                <pre className="text-xs bg-muted/40 p-3 rounded-md overflow-auto">
+{`HTTP/1.1 ${response?.meta?.status || 200}
 Content-Type: application/json
 X-Response-Time: ${response?.meta?.responseTime || 0}ms`}
                 </pre>
 
-                <pre className="text-xs bg-gray-100 p-3 rounded overflow-auto">
+                <pre className="text-xs bg-muted/40 p-3 rounded-md overflow-auto">
                   {JSON.stringify(response, null, 2)}
                 </pre>
               </>
             )}
 
             {!loading && !response && (
-              <p className="text-gray-400">No response yet</p>
+              <p className="text-muted-foreground">
+                No response yet
+              </p>
             )}
           </CardContent>
         </Card>
+
       </div>
     </div>
   );
