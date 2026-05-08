@@ -143,7 +143,7 @@ export default function SidebarComponent() {
               <SidebarMenuItem>
                 <div className="pl-2 py-1.5 pr-11">
                   <p className="pb-1 text-sm font-medium text-sidebar-primary-foreground">
-                    {user?.tenant_name ?? "No Tenant"}
+                    {user?.tenant.name ?? "No Tenant"}
                   </p>
 
                   <p className="text-xs text-sidebar-primary-foreground/70">

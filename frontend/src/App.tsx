@@ -4,6 +4,7 @@ import { Register } from "./pages/Register";
 import { Dashboard } from "./pages/Dashboard";
 import { SidebarLayout} from "./layouts/SidebarLayout";
 import { ApiKeys} from "./pages/ApiKeys";
+import ApiUsage from "./pages/ApiUsage";
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
   <Route path="/" element={<SidebarLayout />}>
     <Route path="dashboard" element={<Dashboard />} />
     <Route path="api-keys" element={<ApiKeys />} />
+    <Route path="usage" element={<ApiUsage />} />
   </Route>
 </Routes>
     </>
