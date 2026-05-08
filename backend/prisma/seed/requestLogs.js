@@ -1,0 +1,35 @@
+export const requestLogs = [
+  { tenantIndex: 0, apiKeyIndex: 0, path: "/books/all", method: "GET", status_code: 200, response_time: 120 },
+  { tenantIndex: 0, apiKeyIndex: 1, path: "/books/all", method: "GET", status_code: 200, response_time: 98 },
+  { tenantIndex: 1, apiKeyIndex: 2, path: "/books/all", method: "GET", status_code: 304, response_time: 40 },
+  { tenantIndex: 1, apiKeyIndex: 2, path: "/books/all", method: "GET", status_code: 200, response_time: 110 },
+  { tenantIndex: 2, apiKeyIndex: 3, path: "/books/all", method: "GET", status_code: 400, response_time: 60 },
+  { tenantIndex: 2, apiKeyIndex: 3, path: "/books/all", method: "GET", status_code: 401, response_time: 55 },
+  { tenantIndex: 0, apiKeyIndex: 0, path: "/books/all", method: "GET", status_code: 500, response_time: 210 },
+  { tenantIndex: 1, apiKeyIndex: 2, path: "/books/all", method: "GET", status_code: 200, response_time: 90 },
+  { tenantIndex: 2, apiKeyIndex: 3, path: "/books/all", method: "GET", status_code: 200, response_time: 75 },
+  { tenantIndex: 0, apiKeyIndex: 1, path: "/books/all", method: "GET", status_code: 304, response_time: 30 },
+
+  { tenantIndex: 0, apiKeyIndex: 0, path: "/books/all", method: "GET", status_code: 200, response_time: 115 },
+  { tenantIndex: 1, apiKeyIndex: 2, path: "/books/all", method: "GET", status_code: 200, response_time: 132 },
+  { tenantIndex: 1, apiKeyIndex: 2, path: "/books/all", method: "GET", status_code: 500, response_time: 220 },
+  { tenantIndex: 2, apiKeyIndex: 3, path: "/books/all", method: "GET", status_code: 200, response_time: 80 },
+  { tenantIndex: 2, apiKeyIndex: 3, path: "/books/all", method: "GET", status_code: 200, response_time: 95 },
+
+  { tenantIndex: 0, apiKeyIndex: 1, path: "/books/all", method: "GET", status_code: 400, response_time: 65 },
+  { tenantIndex: 0, apiKeyIndex: 1, path: "/books/all", method: "GET", status_code: 200, response_time: 105 },
+  { tenantIndex: 1, apiKeyIndex: 2, path: "/books/all", method: "GET", status_code: 304, response_time: 35 },
+  { tenantIndex: 2, apiKeyIndex: 3, path: "/books/all", method: "GET", status_code: 200, response_time: 88 },
+  { tenantIndex: 0, apiKeyIndex: 0, path: "/books/all", method: "GET", status_code: 200, response_time: 99 },
+
+  { tenantIndex: 1, apiKeyIndex: 2, path: "/books/all", method: "GET", status_code: 200, response_time: 140 },
+  { tenantIndex: 2, apiKeyIndex: 3, path: "/books/all", method: "GET", status_code: 401, response_time: 50 },
+  { tenantIndex: 2, apiKeyIndex: 3, path: "/books/all", method: "GET", status_code: 500, response_time: 230 },
+  { tenantIndex: 0, apiKeyIndex: 1, path: "/books/all", method: "GET", status_code: 200, response_time: 120 },
+  { tenantIndex: 1, apiKeyIndex: 2, path: "/books/all", method: "GET", status_code: 200, response_time: 111 },
+
+  { tenantIndex: 0, apiKeyIndex: 0, path: "/books/all", method: "GET", status_code: 304, response_time: 33 },
+  { tenantIndex: 1, apiKeyIndex: 2, path: "/books/all", method: "GET", status_code: 200, response_time: 100 },
+  { tenantIndex: 2, apiKeyIndex: 3, path: "/books/all", method: "GET", status_code: 200, response_time: 85 },
+  { tenantIndex: 0, apiKeyIndex: 1, path: "/books/all", method: "GET", status_code: 400, response_time: 70 },
+];
