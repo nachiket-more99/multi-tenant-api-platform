@@ -1,6 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { 
-  Link2, 
+import {
+  Link2,
   LogOut,
   LayoutDashboard,
   KeyRound,
@@ -21,10 +21,10 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import { logout } from "@/api/auth.api";
-// import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/button";
-import { useState } from "react";
-// import { useMe } from "./hooks/useMe";
+// import { useState } from "react";
+import { useMe } from "../hooks/useMe";
 
 const nav = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -36,20 +36,20 @@ const nav = [
 
 export default function SidebarComponent() {
   const navigate = useNavigate();
-//   const { data: user, isError } = useMe();
+  const { data: user, isError } = useMe();
 
-//   const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const handleLogout = async () => {
     await logout();
-    // queryClient.clear();
+    queryClient.clear();
     navigate("/login");
   };
 
-//   if (isError || !user) {
-//     navigate("/login");
-//     return null;
-//   }
+  if (isError || !user) {
+    navigate("/login");
+    return null;
+  }
 
   return (
     <SidebarProvider>
@@ -59,7 +59,9 @@ export default function SidebarComponent() {
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary">
               <Link2 className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-bold text-sidebar-primary-foreground">API Platform</span>
+            <span className="font-bold text-sidebar-primary-foreground">
+              API Platform
+            </span>
           </div>
           <SidebarContent>
             <SidebarGroup>
@@ -140,8 +142,13 @@ export default function SidebarComponent() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <div className="pl-2 py-1.5 pr-11">
-                  <p className="text-sm font-medium text-sidebar-primary-foreground pb-1">Test Corp</p>
-                  <p className="text-xs text-sidebar-primary-foreground/70">ADMIN · nachiket@email.com</p>
+                  <p className="pb-1 text-sm font-medium text-sidebar-primary-foreground">
+                    {user?.tenant_name ?? "No Tenant"}
+                  </p>
+
+                  <p className="text-xs text-sidebar-primary-foreground/70">
+                    {user?.role ?? "No Role"} · {user?.email ?? "No Email"}
+                  </p>
                 </div>
               </SidebarMenuItem>
               <SidebarMenuItem>
@@ -160,7 +167,6 @@ export default function SidebarComponent() {
         </Sidebar>
 
         <div className="flex flex-1 flex-col">
-          
           <main className="flex-1 p-4">
             <Outlet />
           </main>
