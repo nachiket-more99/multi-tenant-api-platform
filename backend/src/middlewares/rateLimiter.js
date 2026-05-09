@@ -1,26 +1,70 @@
-import { redis } from '../utils/redis.js';
-import { AppError } from '../utils/AppError.js';
+import { redis } from "../utils/redis.js";
+import { AppError } from "../utils/AppError.js";
 
 export const rateLimiter = async (req, res, next) => {
   try {
     const { id, rate_limit } = req.apiKey;
 
-    const window = Math.floor(Date.now() / 60000);
-    const redisKey = `ratelimit:${id}:${window}`;
+    const redisKey = `ratelimit:${id}`;
 
-    const count = await redis.incr(redisKey);
+    const now = Date.now();
+    const windowSize = 60 * 1000;
 
-    if (count === 1) await redis.expire(redisKey, 60);
+    // remove old requests
+    await redis.zremrangebyscore(
+      redisKey,
+      0,
+      now - windowSize
+    );
 
-    if (count > rate_limit) {
-      throw new AppError("Rate limit exceeded", 429);
+    // current request count
+    const count = await redis.zcard(redisKey);
+
+    console.log({
+      redisKey,
+      count,
+      limit: rate_limit,
+    });
+
+    // block if limit exceeded
+    if (count >= rate_limit) {
+      throw new AppError(
+        "Rate limit exceeded",
+        429
+      );
     }
 
-    res.set('X-RateLimit-Limit', rate_limit);
-    res.set('X-RateLimit-Remaining', rate_limit - count);
+    // add current request
+    await redis.zadd(
+      redisKey,
+      now,
+      `${now}`
+    );
+
+    // auto cleanup
+    await redis.expire(redisKey, 60);
+
+    res.set(
+      "X-RateLimit-Limit",
+      rate_limit
+    );
+
+    res.set(
+      "X-RateLimit-Remaining",
+      rate_limit - (count + 1)
+    );
 
     next();
   } catch (err) {
-    res.status(err.statusCode || 500).json({ error: err.message });
+    console.log(
+      "RATE LIMIT ERROR:",
+      err
+    );
+
+    res
+      .status(err.statusCode || 500)
+      .json({
+        error: err.message,
+      });
   }
 };
