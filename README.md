@@ -134,28 +134,27 @@ API_KEY_SECRET=apikeysecret
 JWT_SECRET=supersecret
 ```
 
----
-
-## 2. Start Docker Containers
+## 2. Start DB and Redis first
 
 ```bash
-docker compose up --build
+docker compose up -d postgres redis
 ```
 
----
-
-## 3. Run Prisma Migrations
-
+## 3. Build backend
 ```bash
-docker compose exec backend npx prisma migrate dev
+docker compose up -d --build backend
 ```
 
----
 
-## 4. Seed Database
-
+## 4. Run Prisma migrations inside backend container
 ```bash
-docker compose exec backend npx prisma db seed
+docker compose run --rm backend npx prisma migrate dev
+docker compose run --rm backend npx prisma db seed
+```
+
+## 5. Start full stack
+```bash
+docker compose up
 ```
 
 ---
@@ -170,11 +169,6 @@ http://localhost:5173
 Backend:
 ```txt
 http://localhost:3000
-```
-
-Prisma Studio:
-```txt
-http://localhost:5555
 ```
 ---
 
