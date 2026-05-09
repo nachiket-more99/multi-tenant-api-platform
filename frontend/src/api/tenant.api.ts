@@ -20,3 +20,11 @@ export const getTenantUsers = async () => {
   const { data } = await http.get("/tenant/users");
   return data.users;
 };
+
+export const createTenant = async (name: string) => {
+  const res = await http.post("/tenant/create", {
+    name,
+  });
+
+  return res.data;
+};

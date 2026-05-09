@@ -29,6 +29,7 @@ import { Badge } from "./ui/badge";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateTenantName, addTenantMember } from "@/api/tenant.api";
 import { useTenantUsers } from "@/hooks/useTenantUsers";
+import { CreateTenantPage } from "@/pages/CreateTenantPage";
 
 const nav = [
   { title: "API Keys", url: "/api-keys", icon: KeyRound },
@@ -98,6 +99,9 @@ const updateTenantMutation = useMutation({
   if (isError || !user) {
     navigate("/login");
     return null;
+  }
+  if (!user?.tenant_id) {
+    return <CreateTenantPage />;
   }
 
   return (
