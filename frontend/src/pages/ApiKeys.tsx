@@ -42,7 +42,7 @@ export type ApiKey = {
 };
 
 export function ApiKeys() {
-  const { data: user, isError } = useMe();
+  const { data: user } = useMe();
   const isAdmin = user?.role === "ADMIN";
 
   const queryClient = useQueryClient();

@@ -43,7 +43,7 @@ export function Login() {
     if (!validate()) return;
 
     try {
-      const user = await login(email, password);
+      await login(email, password);
       navigate("/api-keys");
     } catch {
       // handled globally by axios interceptor

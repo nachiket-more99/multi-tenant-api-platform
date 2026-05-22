@@ -54,7 +54,7 @@ const [memberEmail, setMemberEmail] = useState("");
 const [memberError, setMemberError] = useState<string | null>(null);
 const [memberSuccess, setMemberSuccess] = useState<string | null>(null);
 
-const { data: members = [], refetch } = useTenantUsers();
+const { data: members = [] } = useTenantUsers();
 
 const addMemberMutation = useMutation({
   mutationFn: addTenantMember,
@@ -84,7 +84,7 @@ const addMemberMutation = useMutation({
 
 const updateTenantMutation = useMutation({
   mutationFn: updateTenantName,
-  onSuccess: (data) => {
+  onSuccess: () => {
     queryClient.invalidateQueries({ queryKey: ["me"] });
     setEditName(false);
   },

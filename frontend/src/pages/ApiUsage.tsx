@@ -276,7 +276,7 @@ async function loadData() {
                     <td className="px-6 py-4">
                       <Badge variant="outline" 
                             className="rounded-[10%] border-blue-500/30 bg-blue-500/5 text-blue-500">
-                        {l.api_key.key_prefix}
+                        {l.api_id.key_prefix}
                       </Badge>
                     </td>
 
