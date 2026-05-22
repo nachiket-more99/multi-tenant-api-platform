@@ -1,4 +1,6 @@
 import express from "express";
+import prisma from "./lib/prisma.js";
+import redis from "./lib/redis.js";
 import authRouter from "./modules/auth/auth.routes.js";
 import userRouter from "./modules/user/user.routes.js";
 import tenantRouter from "./modules/tenant/tenant.routes.js";
@@ -23,8 +25,31 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Backend is running!");
+app.get("/", async (req, res) => {
+  const health = {
+    status: "ok",
+    postgres: "disconnected",
+    redis: "disconnected",
+    timestamp: new Date().toISOString(),
+  };
+
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    health.postgres = "connected";
+  } catch (err) {
+    health.status = "error";
+  }
+
+  try {
+    await redis.ping();
+    health.redis = "connected";
+  } catch (err) {
+    health.status = "error";
+  }
+
+  const statusCode = health.status === "ok" ? 200 : 500;
+
+  res.status(statusCode).json(health);
 });
 
 app.use("/auth", authRouter);
