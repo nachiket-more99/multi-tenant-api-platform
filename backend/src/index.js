@@ -1,6 +1,6 @@
 import express from "express";
-import prisma from "./lib/prisma.js";
-import redis from "./utils/redis.js";
+import { prisma } from "./lib/prisma.js";
+import { redis } from "./utils/redis.js";
 import authRouter from "./modules/auth/auth.routes.js";
 import userRouter from "./modules/user/user.routes.js";
 import tenantRouter from "./modules/tenant/tenant.routes.js";
