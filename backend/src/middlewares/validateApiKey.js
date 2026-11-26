@@ -1,6 +1,7 @@
 import { prisma } from '../lib/prisma.js';
 import { redis } from "../utils/redis.js";
 import { createHash } from "../utils/crypto.js";
+import { AppError } from '../utils/AppError.js';
 
 export const validateApiKey = async (req, res, next) => {
     try{
